@@ -29,11 +29,11 @@
   align-items: center;
   padding: 1rem;
   margin: auto;
+  cursor: pointer;
   transition: opacity 0.25s;
 }
 
 .button_container:hover {
-  cursor: pointer;
   opacity: 50%;
 }
 
@@ -42,12 +42,12 @@
   width: 20rem;
   border-radius: 25px;
   background-color: #181818;
+  cursor: pointer;
   transition: transform 0.2s, opacity 0.15s;
 }
 
 .project_card:hover {
   transform: scale(1.05);
-  cursor: pointer;
   opacity: 75%;
 }
 
