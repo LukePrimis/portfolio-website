@@ -8,6 +8,7 @@
   background-color: #0b0c0f;
   color: white;
   min-height: 100vh;
+  min-width: 100vw;
   font-family: "Inter", sans-serif;
   font-weight: 400;
   display: flex;

@@ -65,6 +65,8 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
   const { height, width } = useWindowDimensions();
   const [page, setPage] = useState(0);
   const [changing, setChanging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [currentX, setCurrentX] = useState(0);
   const [fadeTimeout, setFadeTimeout] = useState<NodeJS.Timeout>(
     setTimeout(() => {}, 1) // set this to some pointless timeout so typing is fine
   );
@@ -184,10 +186,22 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
       </div>
     </div>
   ) : (
-    <div className={styles.container}>
-      <div
-        className={styles.button_container}
-        onClick={(event) => {
+    <div
+      className={styles.container}
+      onTouchStart={(event) => setStartX(event.touches[0].clientX)}
+      onTouchMove={(event) => setCurrentX(event.touches[0].clientX)}
+      onTouchEnd={(event) => {
+        if (currentX - startX < -50 && currentX !== 0) {
+          clearTimeout(fadeTimeout);
+          setChanging(true);
+          const changingTimeout = setTimeout(() => {
+            setChanging(false);
+          }, 250);
+          setTimeout(() => {
+            setPage(page < projectData.length - 1 ? page + 1 : 0);
+          }, 100);
+          setFadeTimeout(changingTimeout);
+        } else if (currentX - startX > 50 && currentX !== 0) {
           clearTimeout(fadeTimeout);
           setChanging(true);
           const changingTimeout = setTimeout(() => {
@@ -197,10 +211,13 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
             setPage(page > 0 ? page - 1 : projectData.length - 1);
           }, 100);
           setFadeTimeout(changingTimeout);
-          event.stopPropagation();
-        }}
-      >
-        <BackButton />
+        }
+        setStartX(0);
+        setCurrentX(0);
+      }}
+    >
+      <div style={{ marginTop: "1rem" }}>
+        Swipe through some of my projects!
       </div>
       <div className={styles.project_block}>
         <ProjectCard
@@ -217,23 +234,6 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
             });
           }}
         />
-      </div>
-      <div
-        className={styles.button_container}
-        onClick={(event) => {
-          clearTimeout(fadeTimeout);
-          setChanging(true);
-          const changingTimeout = setTimeout(() => {
-            setChanging(false);
-          }, 250);
-          setTimeout(() => {
-            setPage(page < projectData.length - 1 ? page + 1 : 0);
-          }, 100);
-          setFadeTimeout(changingTimeout);
-          event.stopPropagation();
-        }}
-      >
-        <ForwardButton />
       </div>
     </div>
   );

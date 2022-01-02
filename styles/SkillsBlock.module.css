@@ -61,9 +61,11 @@
   transition: opacity 0.1s;
 }
 
-.clear_button:hover {
-  cursor: pointer;
-  opacity: 50%;
+@media (hover: hover) {
+  .clear_button:hover {
+    cursor: pointer;
+    opacity: 50%;
+  }
 }
 
 .project_link {
@@ -71,6 +73,8 @@
   transition: color 0.1s;
 }
 
-.project_link:hover {
-  color: #faa1ce;
+@media (hover: hover) {
+  .project_link:hover {
+    color: #faa1ce;
+  }
 }
