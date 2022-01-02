@@ -1,0 +1,13 @@
+.button {
+  width: 5rem;
+  height: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  /* border-radius: 9999px; */
+}
+
+.image {
+  object-fit: contain;
+}

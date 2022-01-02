@@ -1,15 +1,50 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap");
+
 .container {
-  padding: 0 2rem;
+  background-color: #0b0c0f;
+  /* padding: 0 2rem; */
 }
 
 .main {
+  background-color: #0b0c0f;
+  color: white;
   min-height: 100vh;
-  padding: 4rem 0;
-  flex: 1;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  display: flex;
+  /* padding: 4rem 0; */
+  /* flex: 1; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* flex-wrap: wrap; */
+  /* grid-template-columns: 33% 67%; */
+  /* overflow: auto; */
+  /* grid-template-rows: 100px; */
+}
+
+.wide {
+  display: flex;
+  flex-direction: row;
+  flex-grow: gr;
+}
+
+.thin {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+}
+
+.name_block {
+  display: flex;
+  flex-direction: column;
+  max-width: 30vw;
+  /* grid-template-rows: 33% 67%; */
+  /* overflow: scroll; */
+}
+
+.projects_block {
+  width: 70vw;
+  /* height: 100%; */
+  /* grid-column: 2 / 3; */
 }
 
 .footer {

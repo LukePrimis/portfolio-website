@@ -1,0 +1,76 @@
+.container {
+  padding: 1rem 0 0 1rem;
+  margin-top: 1rem;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.skills_title {
+  font-size: 16px;
+  color: #9ca3af;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.regular {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.fade_in {
+  transition: opacity 1s ease;
+}
+
+.fade_out {
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.skill_section {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.skill {
+  margin-right: 0.5rem;
+  margin-bottom: 0.25rem;
+  padding: 0.5rem;
+  color: #d0d4da;
+  border: 1px solid #d0d4da;
+  border-width: 1px;
+  border-radius: 9999px;
+  flex-shrink: 1;
+  text-align: left;
+}
+
+.clear_button {
+  background-color: white;
+  color: black;
+  font-size: 20px;
+  font-weight: 600;
+  width: 5.5rem;
+  text-align: center;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  border-radius: 9999px;
+  margin-bottom: 1rem;
+  transition: opacity 0.1s;
+}
+
+.clear_button:hover {
+  cursor: pointer;
+  opacity: 50%;
+}
+
+.project_link {
+  color: #f675b6;
+  transition: color 0.1s;
+}
+
+.project_link:hover {
+  color: #faa1ce;
+}

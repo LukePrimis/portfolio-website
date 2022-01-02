@@ -1,0 +1,35 @@
+.container {
+  padding: 1rem 0 0 1rem;
+}
+
+.name {
+  font-size: 48px;
+  font-weight: 600;
+}
+
+.regular {
+  font-size: 24px;
+  font-weight: 400;
+  color: #d0d4da;
+}
+
+.fade_in {
+  transition: opacity 1s ease;
+}
+
+.fade_out {
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.icon {
+  margin: 0.5rem 0.5rem 0 0;
+  color: white;
+  font-size: 40px;
+}
+
+.header {
+  margin-top: 2rem;
+  font-size: 24px;
+  font-weight: 600;
+}
