@@ -40,7 +40,12 @@ const MobileLayout = () => {
     <div className={styles.thin}>
       <NameBlock />
       <ProjectsBlock setSelectedProject={setSelectedProject} />
-      <SkillsBlock />
+      <SkillsBlock
+        projectTitle={selectedProject?.projectTitle}
+        skillsUsed={selectedProject?.skillsUsed}
+        resetProjectData={() => setSelectedProject(undefined)}
+        link={selectedProject?.link}
+      />
     </div>
   );
 };
