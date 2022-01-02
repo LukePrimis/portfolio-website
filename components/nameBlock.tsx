@@ -19,18 +19,31 @@ const ContactCard = () => {
       <div className={styles.header}>{`Don't be shy, say hello!`}</div>
       <div>
         <span>
-          <a href="https://github.com/LukePrimis" target="_blank">
+          <a
+            href="https://github.com/LukePrimis"
+            target="_blank"
+            rel="noreferrer"
+          >
             <GitHub fontSize="large" className={styles.icon} />
           </a>
-          <a href="https://twitter.com/tencentdimes" target="_blank">
+          <a
+            href="https://twitter.com/tencentdimes"
+            target="_blank"
+            rel="noreferrer"
+          >
             <Twitter fontSize="large" className={styles.icon} />
           </a>
-          <a href="mailto:luke_primis@brown.edu" target="_blank">
+          <a
+            href="mailto:luke_primis@brown.edu"
+            target="_blank"
+            rel="noreferrer"
+          >
             <Mail fontSize="large" className={styles.icon} />
           </a>
           <a
             href="https://www.linkedin.com/in/luke-primis-6a85721b8/"
             target="_blank"
+            rel="noreferrer"
           >
             <LinkedIn fontSize="large" className={styles.icon} />
           </a>

@@ -123,7 +123,12 @@ const SkillsBlock = ({
           link !== undefined ? (
             <span>
               {`Here's what I used for`}{" "}
-              <a className={styles.project_link} href={link} target={"_blank"}>
+              <a
+                className={styles.project_link}
+                href={link}
+                target={"_blank"}
+                rel="noreferrer"
+              >
                 {projectTitle + " "}
                 <Launch />
               </a>
