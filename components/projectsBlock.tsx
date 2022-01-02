@@ -66,7 +66,9 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
   const [page, setPage] = useState(0);
   const [changing, setChanging] = useState(false);
   const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
   const [currentX, setCurrentX] = useState(0);
+  const [currentY, setCurrentY] = useState(0);
   const [fadeTimeout, setFadeTimeout] = useState<NodeJS.Timeout>(
     setTimeout(() => {}, 1) // set this to some pointless timeout so typing is fine
   );
@@ -188,32 +190,43 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
   ) : (
     <div
       className={styles.container}
-      onTouchStart={(event) => setStartX(event.touches[0].clientX)}
-      onTouchMove={(event) => setCurrentX(event.touches[0].clientX)}
+      onTouchStart={(event) => {
+        setStartX(event.touches[0].clientX);
+        setStartY(event.touches[0].clientY);
+      }}
+      onTouchMove={(event) => {
+        setCurrentX(event.touches[0].clientX);
+        setCurrentY(event.touches[0].clientY);
+      }}
       onTouchEnd={(event) => {
-        if (currentX - startX < -50 && currentX !== 0) {
-          clearTimeout(fadeTimeout);
-          setChanging(true);
-          const changingTimeout = setTimeout(() => {
-            setChanging(false);
-          }, 250);
-          setTimeout(() => {
-            setPage(page < projectData.length - 1 ? page + 1 : 0);
-          }, 100);
-          setFadeTimeout(changingTimeout);
-        } else if (currentX - startX > 50 && currentX !== 0) {
-          clearTimeout(fadeTimeout);
-          setChanging(true);
-          const changingTimeout = setTimeout(() => {
-            setChanging(false);
-          }, 250);
-          setTimeout(() => {
-            setPage(page > 0 ? page - 1 : projectData.length - 1);
-          }, 100);
-          setFadeTimeout(changingTimeout);
+        if (currentX !== 0 && Math.abs(currentY - startY) < 50) {
+          if (currentX - startX < -150 && currentX !== 0) {
+            clearTimeout(fadeTimeout);
+            setChanging(true);
+            const changingTimeout = setTimeout(() => {
+              setChanging(false);
+            }, 250);
+            setTimeout(() => {
+              setPage(page < projectData.length - 1 ? page + 1 : 0);
+            }, 100);
+            setFadeTimeout(changingTimeout);
+          } else if (currentX - startX > 150 && currentX !== 0) {
+            clearTimeout(fadeTimeout);
+            setChanging(true);
+            const changingTimeout = setTimeout(() => {
+              setChanging(false);
+            }, 250);
+            setTimeout(() => {
+              setPage(page > 0 ? page - 1 : projectData.length - 1);
+            }, 100);
+            setFadeTimeout(changingTimeout);
+          }
         }
+
         setStartX(0);
         setCurrentX(0);
+        setStartY(0);
+        setCurrentY(0);
       }}
     >
       <div style={{ marginTop: "1rem" }}>
