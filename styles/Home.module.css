@@ -2,7 +2,6 @@
 
 .container {
   background-color: #0b0c0f;
-  /* padding: 0 2rem; */
 }
 
 .main {
@@ -12,14 +11,6 @@
   font-family: "Inter", sans-serif;
   font-weight: 400;
   display: flex;
-  /* padding: 4rem 0; */
-  /* flex: 1; */
-  /* justify-content: center; */
-  /* align-items: center; */
-  /* flex-wrap: wrap; */
-  /* grid-template-columns: 33% 67%; */
-  /* overflow: auto; */
-  /* grid-template-rows: 100px; */
 }
 
 .wide {
@@ -31,20 +22,17 @@
 .thin {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .name_block {
   display: flex;
   flex-direction: column;
   max-width: 30vw;
-  /* grid-template-rows: 33% 67%; */
-  /* overflow: scroll; */
 }
 
 .projects_block {
   width: 70vw;
-  /* height: 100%; */
-  /* grid-column: 2 / 3; */
 }
 
 .footer {

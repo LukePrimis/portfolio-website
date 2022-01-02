@@ -53,7 +53,6 @@ const MobileLayout = () => {
 const Home: NextPage = () => {
   const { height, width } = useWindowDimensions();
   const highWidth = width > 1200;
-  console.log(highWidth);
   return (
     <div className={styles.container}>
       <Head>
