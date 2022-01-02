@@ -75,7 +75,11 @@ const NameBlock = () => {
       <div className={styles.regular}>
         <div>Fullstack Developer</div>
         <div>Student at Brown University</div>
-        <div className={fading ? styles.fade_out : styles.fade_in}>
+        <div
+          className={`${fading ? styles.fade_out : styles.fade_in} ${
+            styles.mobile_mods
+          }`}
+        >
           {blurbs[blurbIndex]}
         </div>
       </div>
