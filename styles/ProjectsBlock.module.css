@@ -42,7 +42,7 @@
   width: 20rem;
   border-radius: 25px;
   background-color: #181818;
-  transition: transform 0.2s, opacity 0.2s;
+  transition: transform 0.2s, opacity 0.15s;
 }
 
 .project_card:hover {

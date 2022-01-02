@@ -321,11 +321,13 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
         onClick={(event) => {
           clearTimeout(fadeTimeout);
           setChanging(true);
-          const m1 = setTimeout(() => {
-            setPage(page > 0 ? page - 1 : projectData.length / 4 - 1);
+          const changingTimeout = setTimeout(() => {
             setChanging(false);
-          }, 200);
-          setFadeTimeout(m1);
+          }, 250);
+          setTimeout(() => {
+            setPage(page > 0 ? page - 1 : projectData.length / 4 - 1);
+          }, 100);
+          setFadeTimeout(changingTimeout);
           event.stopPropagation();
         }}
       >
@@ -398,11 +400,13 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
         onClick={(event) => {
           clearTimeout(fadeTimeout);
           setChanging(true);
-          const m1 = setTimeout(() => {
-            setPage(page < projectData.length / 4 - 1 ? page + 1 : 0);
+          const changingTimeout = setTimeout(() => {
             setChanging(false);
-          }, 200);
-          setFadeTimeout(m1);
+          }, 250);
+          setTimeout(() => {
+            setPage(page < projectData.length / 4 - 1 ? page + 1 : 0);
+          }, 100);
+          setFadeTimeout(changingTimeout);
           event.stopPropagation();
         }}
       >
