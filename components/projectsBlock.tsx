@@ -29,6 +29,7 @@ interface ProjectCardProps {
   onClick: () => void;
   onLoadingComplete: () => void;
   onAnimationEnd: () => void;
+  clickable: boolean;
 }
 
 enum direction {
@@ -45,12 +46,13 @@ const ProjectCard = ({
   onClick,
   onLoadingComplete,
   onAnimationEnd,
+  clickable,
 }: ProjectCardProps) => {
   return (
     <div
       className={`${styles.project_card} ${wideMode ? styles.wide : ""} ${
         changing ? styles.changing : ""
-      }`}
+      } ${clickable ? styles.clickable : ""}`}
       onClick={(event) => {
         onClick();
         event.stopPropagation();
@@ -96,6 +98,7 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
   const [imagesFaded, setImagesFaded] = useState(false);
   const [imagesLoaded, setImagesLoaded] = useState(0);
   const [changeDirection, setChangeDirection] = useState(direction.back);
+  const [clickable, setClickable] = useState(true);
 
   const onCardImageLoaded = () => {
     if (imagesFaded) {
@@ -123,6 +126,8 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
           break;
       }
       setImagesFaded(true);
+    } else if (!clickable) {
+      setClickable(true);
     }
   };
 
@@ -145,6 +150,7 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
           if (!changing) {
             setChangeDirection(direction.back);
             setChanging(true);
+            setClickable(false);
             event.stopPropagation();
           }
         }}
@@ -169,6 +175,7 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
               }}
               onAnimationEnd={onCardTransitionEnd}
               onLoadingComplete={onCardImageLoaded}
+              clickable={clickable}
             />
             <ProjectCard
               title={projectData[page * 4 + 1].title}
@@ -185,6 +192,7 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
               }}
               onAnimationEnd={onCardTransitionEnd}
               onLoadingComplete={onCardImageLoaded}
+              clickable={clickable}
             />
           </div>
         )}
@@ -205,6 +213,7 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
               }}
               onAnimationEnd={onCardTransitionEnd}
               onLoadingComplete={onCardImageLoaded}
+              clickable={clickable}
             />
             <ProjectCard
               title={projectData[page * 4 + 3].title}
@@ -221,6 +230,7 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
               }}
               onAnimationEnd={onCardTransitionEnd}
               onLoadingComplete={onCardImageLoaded}
+              clickable={clickable}
             />
           </div>
         )}
@@ -230,6 +240,7 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
         onClick={(event) => {
           if (!changing) {
             setChangeDirection(direction.forward);
+            setClickable(false);
             setChanging(true);
             event.stopPropagation();
           }
@@ -297,6 +308,9 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
               link: projectData[page].link,
             });
           }}
+          onAnimationEnd={onCardTransitionEnd}
+          onLoadingComplete={onCardImageLoaded}
+          clickable={clickable}
         />
       </div>
     </div>

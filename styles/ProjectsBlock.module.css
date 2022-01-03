@@ -60,7 +60,7 @@
 }
 
 @media (hover: hover) {
-  .not_changing:hover {
+  .clickable:hover {
     transform: scale(1.05);
     opacity: 75%;
   }
