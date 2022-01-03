@@ -10,11 +10,12 @@ import { BackButton, ForwardButton } from "./button";
 import { SkillCategory, SkillsBlockProps } from "./skillsBlock";
 import projectData from "./projectData";
 import useWindowDimensions from "../utils/getWindowDimensions";
+import Image from "next/image";
 
 export interface Project {
   title: string;
   description: string;
-  image: string;
+  image: StaticImageData;
   skills: Array<SkillCategory>;
   link?: string;
 }
@@ -23,9 +24,16 @@ interface ProjectCardProps {
   wideMode: boolean;
   title: string;
   description: string;
-  image: string;
+  image: StaticImageData;
   changing: boolean;
   onClick: () => void;
+  onLoadingComplete: () => void;
+  onAnimationEnd: () => void;
+}
+
+enum direction {
+  back,
+  forward,
 }
 
 const ProjectCard = ({
@@ -35,6 +43,8 @@ const ProjectCard = ({
   image,
   changing,
   onClick,
+  onLoadingComplete,
+  onAnimationEnd,
 }: ProjectCardProps) => {
   return (
     <div
@@ -45,9 +55,20 @@ const ProjectCard = ({
         onClick();
         event.stopPropagation();
       }}
+      onTransitionEnd={onAnimationEnd}
     >
       <div className={styles.image_container}>
-        <img src={image} className={styles.card_image} />
+        <Image
+          layout={"fill"}
+          placeholder={"blur"}
+          src={image}
+          className={styles.card_image}
+          // Note: onLoadingComplete event is firing way more than once
+          // idk why but hence the extra handling in the prop function i pass in
+          // also had to do opacity: 1% instead of 0 in the css to trick next.js
+          // into loading my images in, makes it look way smoother
+          onLoadingComplete={onLoadingComplete}
+        />
       </div>
       <div className={styles.text_section}>
         <div className={styles.title}>{title}</div>
@@ -72,6 +93,38 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
   const [fadeTimeout, setFadeTimeout] = useState<NodeJS.Timeout>(
     setTimeout(() => {}, 1) // set this to some pointless timeout so typing is fine
   );
+  const [imagesFaded, setImagesFaded] = useState(false);
+  const [imagesLoaded, setImagesLoaded] = useState(0);
+  const [changeDirection, setChangeDirection] = useState(direction.back);
+
+  const onCardImageLoaded = () => {
+    if (imagesFaded) {
+      if (imagesLoaded < 3) {
+        setImagesLoaded(imagesLoaded + 1);
+      } else {
+        setImagesLoaded(0);
+        setChanging(false);
+        setImagesFaded(false);
+      }
+    }
+  };
+
+  const onCardTransitionEnd = () => {
+    if (changing) {
+      switch (changeDirection) {
+        case direction.forward:
+          setPage(page < projectData.length / 4 - 1 ? page + 1 : 0);
+          break;
+        case direction.back:
+          setPage(page > 0 ? page - 1 : projectData.length / 4 - 1);
+          break;
+        default:
+          setPage(page > 0 ? page - 1 : projectData.length / 4 - 1);
+          break;
+      }
+      setImagesFaded(true);
+    }
+  };
 
   //not sure if i like this solution, it works but i might try to rework this lataer
   useEffect(() => {
@@ -89,16 +142,11 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
       <div
         className={styles.button_container}
         onClick={(event) => {
-          clearTimeout(fadeTimeout);
-          setChanging(true);
-          const changingTimeout = setTimeout(() => {
-            setChanging(false);
-          }, 250);
-          setTimeout(() => {
-            setPage(page > 0 ? page - 1 : projectData.length / 4 - 1);
-          }, 100);
-          setFadeTimeout(changingTimeout);
-          event.stopPropagation();
+          if (!changing) {
+            setChangeDirection(direction.back);
+            setChanging(true);
+            event.stopPropagation();
+          }
         }}
       >
         <BackButton />
@@ -119,6 +167,8 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
                   link: projectData[page * 4].link,
                 });
               }}
+              onAnimationEnd={onCardTransitionEnd}
+              onLoadingComplete={onCardImageLoaded}
             />
             <ProjectCard
               title={projectData[page * 4 + 1].title}
@@ -133,6 +183,8 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
                   link: projectData[page * 4 + 1].link,
                 });
               }}
+              onAnimationEnd={onCardTransitionEnd}
+              onLoadingComplete={onCardImageLoaded}
             />
           </div>
         )}
@@ -151,6 +203,8 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
                   link: projectData[page * 4 + 2].link,
                 });
               }}
+              onAnimationEnd={onCardTransitionEnd}
+              onLoadingComplete={onCardImageLoaded}
             />
             <ProjectCard
               title={projectData[page * 4 + 3].title}
@@ -165,6 +219,8 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
                   link: projectData[page * 4 + 3].link,
                 });
               }}
+              onAnimationEnd={onCardTransitionEnd}
+              onLoadingComplete={onCardImageLoaded}
             />
           </div>
         )}
@@ -172,16 +228,11 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
       <div
         className={styles.button_container}
         onClick={(event) => {
-          clearTimeout(fadeTimeout);
-          setChanging(true);
-          const changingTimeout = setTimeout(() => {
-            setChanging(false);
-          }, 250);
-          setTimeout(() => {
-            setPage(page < projectData.length / 4 - 1 ? page + 1 : 0);
-          }, 100);
-          setFadeTimeout(changingTimeout);
-          event.stopPropagation();
+          if (!changing) {
+            setChangeDirection(direction.forward);
+            setChanging(true);
+            event.stopPropagation();
+          }
         }}
       >
         <ForwardButton />

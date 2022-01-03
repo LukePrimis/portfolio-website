@@ -60,13 +60,14 @@
 }
 
 @media (hover: hover) {
-  .project_card:hover {
+  .not_changing:hover {
     transform: scale(1.05);
     opacity: 75%;
   }
 }
+
 .changing {
-  opacity: 0;
+  opacity: 1%;
 }
 
 .selected {
@@ -100,4 +101,5 @@
 .image_container {
   height: 50%;
   margin-bottom: 0.5rem;
+  position: relative;
 }
