@@ -65,6 +65,7 @@ const ProjectCard = ({
           placeholder={"blur"}
           src={image}
           className={styles.card_image}
+          priority={true}
           // Note: onLoadingComplete event is firing way more than once
           // idk why but hence the extra handling in the prop function i pass in
           // also had to do opacity: 1% instead of 0 in the css to trick next.js
@@ -75,6 +76,58 @@ const ProjectCard = ({
       <div className={styles.text_section}>
         <div className={styles.title}>{title}</div>
         <div className={styles.description}>{description}</div>
+      </div>
+    </div>
+  );
+};
+
+interface ProjectSectionProps {
+  projects: Array<Project>;
+  changing: boolean;
+  clickable: boolean;
+  hidden: boolean;
+}
+
+const ProjectSection = ({
+  projects,
+  changing,
+  clickable,
+  hidden,
+}: ProjectSectionProps) => {
+  if (projects.length !== 4) {
+    throw "ProjectSection needs to take exactly 4 projects as input";
+  }
+  return (
+    <div className={`${styles.project_block} ${hidden ? styles.hidden : ""}`}>
+      <div className={styles.project_row}>
+        {projects.slice(0, 2).map((proj) => (
+          <ProjectCard
+            wideMode={false}
+            title={proj.title}
+            description={proj.description}
+            image={proj.image}
+            changing={changing}
+            onClick={() => {}}
+            onLoadingComplete={() => {}}
+            onAnimationEnd={() => {}}
+            clickable={clickable}
+          />
+        ))}
+      </div>
+      <div className={styles.project_row}>
+        {projects.slice(2, 4).map((proj) => (
+          <ProjectCard
+            wideMode={false}
+            title={proj.title}
+            description={proj.description}
+            image={proj.image}
+            changing={changing}
+            onClick={() => {}}
+            onLoadingComplete={() => {}}
+            onAnimationEnd={() => {}}
+            clickable={clickable}
+          />
+        ))}
       </div>
     </div>
   );
@@ -147,103 +200,36 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
       <div
         className={styles.button_container}
         onClick={(event) => {
-          if (!changing) {
-            setChangeDirection(direction.back);
-            setChanging(true);
-            setClickable(false);
-            event.stopPropagation();
-          }
+          // if (!changing) {
+          //   setChangeDirection(direction.back);
+          //   setChanging(true);
+          //   setClickable(false);
+          //   event.stopPropagation();
+          // }
+          setPage(page - 1);
         }}
       >
         <BackButton />
       </div>
-      <div className={styles.project_block}>
-        {page < 4 && (
-          <div className={styles.card_container}>
-            <ProjectCard
-              title={projectData[page * 4].title}
-              description={projectData[page * 4].description}
-              image={projectData[page * 4].image}
-              wideMode={true}
-              changing={changing}
-              onClick={() => {
-                setSelectedProject({
-                  projectTitle: projectData[page * 4].title,
-                  skillsUsed: projectData[page * 4].skills,
-                  link: projectData[page * 4].link,
-                });
-              }}
-              onAnimationEnd={onCardTransitionEnd}
-              onLoadingComplete={onCardImageLoaded}
-              clickable={clickable}
-            />
-            <ProjectCard
-              title={projectData[page * 4 + 1].title}
-              description={projectData[page * 4 + 1].description}
-              image={projectData[page * 4 + 1].image}
-              wideMode={true}
-              changing={changing}
-              onClick={() => {
-                setSelectedProject({
-                  projectTitle: projectData[page * 4 + 1].title,
-                  skillsUsed: projectData[page * 4 + 1].skills,
-                  link: projectData[page * 4 + 1].link,
-                });
-              }}
-              onAnimationEnd={onCardTransitionEnd}
-              onLoadingComplete={onCardImageLoaded}
-              clickable={clickable}
-            />
-          </div>
-        )}
-        {page < 4 && (
-          <div className={styles.card_container}>
-            <ProjectCard
-              title={projectData[page * 4 + 2].title}
-              description={projectData[page * 4 + 2].description}
-              image={projectData[page * 4 + 2].image}
-              wideMode={true}
-              changing={changing}
-              onClick={() => {
-                setSelectedProject({
-                  projectTitle: projectData[page * 4 + 2].title,
-                  skillsUsed: projectData[page * 4 + 2].skills,
-                  link: projectData[page * 4 + 2].link,
-                });
-              }}
-              onAnimationEnd={onCardTransitionEnd}
-              onLoadingComplete={onCardImageLoaded}
-              clickable={clickable}
-            />
-            <ProjectCard
-              title={projectData[page * 4 + 3].title}
-              description={projectData[page * 4 + 3].description}
-              image={projectData[page * 4 + 3].image}
-              wideMode={true}
-              changing={changing}
-              onClick={() => {
-                setSelectedProject({
-                  projectTitle: projectData[page * 4 + 3].title,
-                  skillsUsed: projectData[page * 4 + 3].skills,
-                  link: projectData[page * 4 + 3].link,
-                });
-              }}
-              onAnimationEnd={onCardTransitionEnd}
-              onLoadingComplete={onCardImageLoaded}
-              clickable={clickable}
-            />
-          </div>
-        )}
-      </div>
+      {Array.from({ length: projectData.length / 4 }, (x, i) => i).map((i) => (
+        <ProjectSection
+          projects={projectData.slice(4 * i, 4 * (i + 1))}
+          changing={changing}
+          clickable={clickable}
+          hidden={i !== page}
+        />
+      ))}
+
       <div
         className={styles.button_container}
         onClick={(event) => {
-          if (!changing) {
-            setChangeDirection(direction.forward);
-            setClickable(false);
-            setChanging(true);
-            event.stopPropagation();
-          }
+          // if (!changing) {
+          //   setChangeDirection(direction.forward);
+          //   setClickable(false);
+          //   setChanging(true);
+          //   event.stopPropagation();
+          // }
+          setPage(page + 1);
         }}
       >
         <ForwardButton />
