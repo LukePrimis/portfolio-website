@@ -111,6 +111,7 @@ const ProjectSection = ({
             onLoadingComplete={() => {}}
             onAnimationEnd={() => {}}
             clickable={clickable}
+            key={proj.title}
           />
         ))}
       </div>
@@ -126,6 +127,7 @@ const ProjectSection = ({
             onLoadingComplete={() => {}}
             onAnimationEnd={() => {}}
             clickable={clickable}
+            key={proj.title}
           />
         ))}
       </div>
@@ -217,6 +219,7 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
           changing={changing}
           clickable={clickable}
           hidden={i !== page}
+          key={i}
         />
       ))}
 
