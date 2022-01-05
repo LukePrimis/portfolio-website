@@ -22,11 +22,7 @@ interface ProjectCardProps {
   changing: boolean;
   onClick: () => void;
   clickable: boolean;
-}
-
-enum direction {
-  back,
-  forward,
+  hidden?: boolean;
 }
 
 const ProjectCard = ({
@@ -37,12 +33,13 @@ const ProjectCard = ({
   changing,
   onClick,
   clickable,
+  hidden,
 }: ProjectCardProps) => {
   return (
     <div
       className={`${styles.project_card} ${wideMode ? styles.wide : ""} ${
         changing ? styles.changing : ""
-      } ${clickable ? styles.clickable : ""}`}
+      } ${clickable ? styles.clickable : ""} ${hidden ? styles.hidden : ""}`}
       onClick={(event) => {
         onClick();
         event.stopPropagation();
@@ -254,26 +251,71 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
       }}
     >
       <div style={{ marginTop: "1rem" }}>
-        Swipe through some of my projects!
+        Swipe or click through some of my projects!
       </div>
       <div className={styles.project_block}>
-        <ProjectCard
-          title={projectData[page].title}
-          description={projectData[page].description}
-          image={projectData[page].image}
-          wideMode={true}
-          changing={changing}
-          onClick={() => {
-            setSelectedProject({
-              projectTitle: projectData[page].title,
-              skillsUsed: projectData[page].skills,
-              link: projectData[page].link,
-            });
+        {projectData.map((proj, ind) => (
+          <ProjectCard
+            wideMode={false}
+            title={proj.title}
+            description={proj.description}
+            image={proj.image}
+            changing={changing}
+            onClick={() => {
+              setSelectedProject({
+                projectTitle: proj.title,
+                skillsUsed: proj.skills,
+                link: proj.link,
+              });
+            }}
+            clickable={clickable}
+            hidden={page !== ind}
+            key={proj.title}
+          />
+        ))}
+      </div>
+      <div className={styles.mobile_buttons}>
+        <div
+          className={styles.button_container}
+          style={{ margin: "auto" }}
+          onClick={(event) => {
+            if (!changing) {
+              setChanging(true);
+              // the timeouts here are not the most elegant solution, but the transitionEnd
+              // was giving me a ton of issues with firing multiple times. so i went back to this
+              setTimeout(() => {
+                setPage(page > 0 ? page - 1 : projectData.length - 1);
+                setChanging(false);
+              }, 200);
+              setClickable(false);
+              setTimeout(() => {
+                setClickable(true);
+              }, 350);
+              event.stopPropagation();
+            }
           }}
-          onAnimationEnd={onCardTransitionEnd}
-          onLoadingComplete={onCardImageLoaded}
-          clickable={clickable}
-        />
+        >
+          <BackButton />
+        </div>
+        <div
+          className={styles.button_container}
+          onClick={(event) => {
+            if (!changing) {
+              setChanging(true);
+              setTimeout(() => {
+                setPage(page < projectData.length - 1 ? page + 1 : 0);
+                setChanging(false);
+              }, 200);
+              setClickable(false);
+              setTimeout(() => {
+                setClickable(true);
+              }, 350);
+              event.stopPropagation();
+            }
+          }}
+        >
+          <ForwardButton />
+        </div>
       </div>
     </div>
   );
