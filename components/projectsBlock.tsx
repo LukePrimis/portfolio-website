@@ -1,10 +1,4 @@
-import {
-  Dispatch,
-  MutableRefObject,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from "../styles/ProjectsBlock.module.css";
 import { BackButton, ForwardButton } from "./button";
 import { SkillCategory, SkillsBlockProps } from "./skillsBlock";
@@ -27,8 +21,6 @@ interface ProjectCardProps {
   image: StaticImageData;
   changing: boolean;
   onClick: () => void;
-  onLoadingComplete: () => void;
-  onAnimationEnd: () => void;
   clickable: boolean;
 }
 
@@ -44,8 +36,6 @@ const ProjectCard = ({
   image,
   changing,
   onClick,
-  onLoadingComplete,
-  onAnimationEnd,
   clickable,
 }: ProjectCardProps) => {
   return (
@@ -57,7 +47,6 @@ const ProjectCard = ({
         onClick();
         event.stopPropagation();
       }}
-      onTransitionEnd={onAnimationEnd}
     >
       <div className={styles.image_container}>
         <Image
@@ -66,11 +55,6 @@ const ProjectCard = ({
           src={image}
           className={styles.card_image}
           priority={true}
-          // Note: onLoadingComplete event is firing way more than once
-          // idk why but hence the extra handling in the prop function i pass in
-          // also had to do opacity: 1% instead of 0 in the css to trick next.js
-          // into loading my images in, makes it look way smoother
-          onLoadingComplete={onLoadingComplete}
         />
       </div>
       <div className={styles.text_section}>
@@ -86,6 +70,7 @@ interface ProjectSectionProps {
   changing: boolean;
   clickable: boolean;
   hidden: boolean;
+  setSelectedProject: Dispatch<SetStateAction<SkillsBlockProps | undefined>>;
 }
 
 const ProjectSection = ({
@@ -93,6 +78,7 @@ const ProjectSection = ({
   changing,
   clickable,
   hidden,
+  setSelectedProject,
 }: ProjectSectionProps) => {
   if (projects.length !== 4) {
     throw "ProjectSection needs to take exactly 4 projects as input";
@@ -107,9 +93,13 @@ const ProjectSection = ({
             description={proj.description}
             image={proj.image}
             changing={changing}
-            onClick={() => {}}
-            onLoadingComplete={() => {}}
-            onAnimationEnd={() => {}}
+            onClick={() => {
+              setSelectedProject({
+                projectTitle: proj.title,
+                skillsUsed: proj.skills,
+                link: proj.link,
+              });
+            }}
             clickable={clickable}
             key={proj.title}
           />
@@ -123,9 +113,13 @@ const ProjectSection = ({
             description={proj.description}
             image={proj.image}
             changing={changing}
-            onClick={() => {}}
-            onLoadingComplete={() => {}}
-            onAnimationEnd={() => {}}
+            onClick={() => {
+              setSelectedProject({
+                projectTitle: proj.title,
+                skillsUsed: proj.skills,
+                link: proj.link,
+              });
+            }}
             clickable={clickable}
             key={proj.title}
           />
@@ -150,41 +144,7 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
   const [fadeTimeout, setFadeTimeout] = useState<NodeJS.Timeout>(
     setTimeout(() => {}, 1) // set this to some pointless timeout so typing is fine
   );
-  const [imagesFaded, setImagesFaded] = useState(false);
-  const [imagesLoaded, setImagesLoaded] = useState(0);
-  const [changeDirection, setChangeDirection] = useState(direction.back);
   const [clickable, setClickable] = useState(true);
-
-  const onCardImageLoaded = () => {
-    if (imagesFaded) {
-      if (imagesLoaded < 3) {
-        setImagesLoaded(imagesLoaded + 1);
-      } else {
-        setImagesLoaded(0);
-        setChanging(false);
-        setImagesFaded(false);
-      }
-    }
-  };
-
-  const onCardTransitionEnd = () => {
-    if (changing) {
-      switch (changeDirection) {
-        case direction.forward:
-          setPage(page < projectData.length / 4 - 1 ? page + 1 : 0);
-          break;
-        case direction.back:
-          setPage(page > 0 ? page - 1 : projectData.length / 4 - 1);
-          break;
-        default:
-          setPage(page > 0 ? page - 1 : projectData.length / 4 - 1);
-          break;
-      }
-      setImagesFaded(true);
-    } else if (!clickable) {
-      setClickable(true);
-    }
-  };
 
   //not sure if i like this solution, it works but i might try to rework this lataer
   useEffect(() => {
@@ -202,13 +162,20 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
       <div
         className={styles.button_container}
         onClick={(event) => {
-          // if (!changing) {
-          //   setChangeDirection(direction.back);
-          //   setChanging(true);
-          //   setClickable(false);
-          //   event.stopPropagation();
-          // }
-          setPage(page - 1);
+          if (!changing) {
+            setChanging(true);
+            // the timeouts here are not the most elegant solution, but the transitionEnd
+            // was giving me a ton of issues with firing multiple times. so i went back to this
+            setTimeout(() => {
+              setPage(page > 0 ? page - 1 : projectData.length / 4 - 1);
+              setChanging(false);
+            }, 200);
+            setClickable(false);
+            setTimeout(() => {
+              setClickable(true);
+            }, 350);
+            event.stopPropagation();
+          }
         }}
       >
         <BackButton />
@@ -219,6 +186,7 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
           changing={changing}
           clickable={clickable}
           hidden={i !== page}
+          setSelectedProject={setSelectedProject}
           key={i}
         />
       ))}
@@ -226,13 +194,18 @@ const ProjectsBlock = ({ setSelectedProject }: ProjectsBlockProps) => {
       <div
         className={styles.button_container}
         onClick={(event) => {
-          // if (!changing) {
-          //   setChangeDirection(direction.forward);
-          //   setClickable(false);
-          //   setChanging(true);
-          //   event.stopPropagation();
-          // }
-          setPage(page + 1);
+          if (!changing) {
+            setChanging(true);
+            setTimeout(() => {
+              setPage(page < projectData.length / 4 - 1 ? page + 1 : 0);
+              setChanging(false);
+            }, 200);
+            setClickable(false);
+            setTimeout(() => {
+              setClickable(true);
+            }, 350);
+            event.stopPropagation();
+          }
         }}
       >
         <ForwardButton />
